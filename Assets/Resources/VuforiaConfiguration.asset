@@ -44,12 +44,8 @@ MonoBehaviour:
       ContainsMagnet: 0
   databaseLoad:
     dataSetsToLoad:
-    - VuforiaMars_Images
-    - VuforiaMars_VuMark
     - battleshipDatabase
     dataSetsToActivate:
-    - VuforiaMars_Images
-    - VuforiaMars_VuMark
     - battleshipDatabase
   videoBackground:
     clippingMode: 0

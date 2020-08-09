@@ -22,14 +22,14 @@ public class PlayerSetup : NetworkBehaviour {
 
 		if (!isLocalPlayer) {
 
-			buttonControlsToDisable.enabled = false;
-			doneButtonTodisable.enabled = false;
-			shipToDisable.enabled = false;
-			touchControlsToDisable.enabled = true;
+			//buttonControlsToDisable.enabled = false;
+			//doneButtonTodisable.enabled = false;
+			//shipToDisable.enabled = false;
+			//touchControlsToDisable.enabled = true;
 		}
 
 		if (isLocalPlayer) {
-			touchControlsToDisable.enabled = false;
+			//touchControlsToDisable.enabled = true;
 		}
 	}
 
