@@ -17,20 +17,7 @@ public class PlayerSetup : NetworkBehaviour {
 	[SerializeField]
 	private Renderer shipToDisable;
 
-	// Use this for initialization
-	void Start () {
 
-		if (!isLocalPlayer) {
 
-			//buttonControlsToDisable.enabled = false;
-			//doneButtonTodisable.enabled = false;
-			//shipToDisable.enabled = false;
-			//touchControlsToDisable.enabled = true;
-		}
-
-		if (isLocalPlayer) {
-			//touchControlsToDisable.enabled = true;
-		}
-	}
 
 }

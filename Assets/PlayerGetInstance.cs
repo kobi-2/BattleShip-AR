@@ -4,12 +4,21 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 
+public static class FlagClass {
+
+	public static bool[] rowStatus { get; set; }
+
+}
+
+
+
 public class PlayerGetInstance : NetworkBehaviour {
 
 	public DoneButtonScript doneButtonScript;
 	public GameObject localTile0, localTile1, localTile2;
 	public GameObject remoteTile0, remoteTile1, remoteTile2;
 
+	public bool isServersTurn, thisIsServer;
 
 	void Start () {
 		
@@ -18,7 +27,9 @@ public class PlayerGetInstance : NetworkBehaviour {
 		//this.GetInstanceID;
 
 		getTiles ();
+		isServersTurn = false;
 
+		/*
 		RemotePlayer remotePlayer = new RemotePlayer();
 		remotePlayer.playerInstanceID = this.GetInstanceID ();
 		remotePlayer.remoteTiles [0] = localTile0;
@@ -26,6 +37,7 @@ public class PlayerGetInstance : NetworkBehaviour {
 		remotePlayer.remoteTiles [2] = localTile2;
 		
 		CmdSendTiles (remotePlayer);
+		*/
 
 	}
 
@@ -35,6 +47,7 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 		getTiles ();
 
+		/*
 		RemotePlayer remotePlayer = new RemotePlayer();
 		remotePlayer.playerInstanceID = this.GetInstanceID ();
 		remotePlayer.remoteTiles [0] = localTile0;
@@ -42,9 +55,16 @@ public class PlayerGetInstance : NetworkBehaviour {
 		remotePlayer.remoteTiles [2] = localTile2;
 
 		CmdSendTiles (remotePlayer);
+		*/
 
 	}
 
+
+	public void calculateIsServer(){
+		if (isServer) {
+			thisIsServer = true;
+		}
+	}
 
 
 	void getTiles(){
@@ -57,12 +77,55 @@ public class PlayerGetInstance : NetworkBehaviour {
 			localTile2 = doneButtonScript.tile2;
 		}
 
+
+
+
+		if (isServer) {
+
+			thisIsServer = true;
+			
+			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
+
+
+			gameObjects [0].GetComponent<Renderer> ().material.color = Color.red;
+
+			gameObjects [1].GetComponent<Renderer> ().material.color = Color.green;
+
+			DoneButtonScript dB = gameObjects [1].GetComponentInChildren<DoneButtonScript> ();// index 1 is the remote player for server
+
+			dB.calculateTilePosition ();
+			//dB.calculateTilePosition (FlagClass.rowStatus[0]);
+
+			remoteTile0 = dB.tile0;
+			remoteTile1 = dB.tile1;
+			remoteTile2 = dB.tile2;
+
+		}
+
+		if (isLocalPlayer) {
+
+			thisIsServer = false;
 		
+			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
+
+			gameObjects [0].GetComponent<Renderer> ().material.color = Color.blue;
+
+			gameObjects [1].GetComponent<Renderer> ().material.color = Color.black;
+
+			DoneButtonScript dB = gameObjects [0].GetComponentInChildren<DoneButtonScript> ();	// index 0 is the server
+
+			dB.calculateTilePosition ();
+			//FlagClass.rowStatus[gameObjects.Length-1] = ShipOrientation.rowWise;
+			//dB.calculateTilePosition (FlagClass.rowStatus[gameObjects.Length-1]);
+
+			remoteTile0 = dB.tile0;
+			remoteTile1 = dB.tile1;
+			remoteTile2 = dB.tile2;
+
+		}
+
 
 		/*
-		 * 
-		GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
-
 		for (int i = 0; i < gameObjects.Length; i++) {
 			
 			DoneButtonScript dB = gameObjects [i].GetComponent<DoneButtonScript> ();
@@ -77,7 +140,6 @@ public class PlayerGetInstance : NetworkBehaviour {
 			}
 		
 		}
-
 		*/
 
 
@@ -102,6 +164,16 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 	}
 
+
+	[Command]
+	public void CmdSendTurnStatus(bool turnStatus){
+		RpcUpdateTurnStatus (turnStatus);
+	}
+
+	[ClientRpc]
+	public void RpcUpdateTurnStatus(bool turnStatus){
+		isServersTurn = turnStatus;
+	}
 
 
 	[Command]

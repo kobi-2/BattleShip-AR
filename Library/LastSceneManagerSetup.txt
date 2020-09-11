@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Scenes/done_button_with_script.unity
+  isLoaded: 1
+  isActive: 1

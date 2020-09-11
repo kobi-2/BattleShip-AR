@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public static class ShipOrientation {
+
+	public static bool rowWise { get; set; }
+
+}
+
+
 public class ButtonControls : MonoBehaviour {
 
 	public static float MovementAlongXAxis = 0.0f, MovementAlongZAxis = 0.0f, Rotation=0.0f;
@@ -18,7 +26,10 @@ public class ButtonControls : MonoBehaviour {
 
 		spawnPoint = this.transform.position;
 
-		rowWise = true;
+		//rowWise = true;
+		//ShipOrientation.Instance.rowWise = true;
+		ShipOrientation.rowWise = true;
+
 		changeParameters ();
 
 	}
@@ -60,25 +71,49 @@ public class ButtonControls : MonoBehaviour {
 	public void RotateClockwiseButtonTouched()
 	{
 		Rotation = 90f;
-		this.transform.Rotate(0,Rotation,0);
+		//this.transform.Rotate(0,Rotation,0);
 
-		rowWise = !rowWise;
+
+		//if ( (this.transform.rotation.eulerAngles.y > 88) && (this.transform.rotation.eulerAngles.y < 92) ) {
+		if ( ((int) this.transform.rotation.eulerAngles.y) > 50) {
+			this.transform.Rotate (0, -90f, 0);
+		} else {
+			this.transform.Rotate (0, 90f, 0);
+		}
+
+
+		//rowWise = !rowWise;
+		//ShipOrientation.Instance.rowWise = ! ShipOrientation.Instance.rowWise;
+		ShipOrientation.rowWise = ! ShipOrientation.rowWise;
 		changeParameters ();
 	}
 
 	public void RotateAnticlockwiseButtonTouched()
 	{
 		Rotation = -90f;
-		this.transform.Rotate(0,Rotation,0);
+		//this.transform.Rotate(0,Rotation,0);
 
-		rowWise = !rowWise;
+
+		//if ( (this.transform.rotation.eulerAngles.y > 88) && (this.transform.rotation.eulerAngles.y < 92) ) {
+		if ( ((int) this.transform.rotation.eulerAngles.y) > 50) {
+			this.transform.Rotate (0, -90f, 0);
+		} else {
+			this.transform.Rotate (0, 90f, 0);
+		}
+
+
+		//rowWise = !rowWise;
+		//ShipOrientation.Instance.rowWise = ! ShipOrientation.Instance.rowWise;
+		ShipOrientation.rowWise = ! ShipOrientation.rowWise;
 		changeParameters ();
 	}
 
 
 
 	private void changeParameters(){
-		if (rowWise) {
+		//if (ShipOrientation.Instance.rowWise) {
+		//if(rowWise){
+		if(ShipOrientation.rowWise){
 			addXRange = 0f;
 			addZRange = 5f;
 		} else {

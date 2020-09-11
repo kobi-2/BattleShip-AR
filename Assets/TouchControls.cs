@@ -48,7 +48,7 @@ public class TouchControls : MonoBehaviour {
 
 			battleshipTiles = this.GetComponentInParent<PlayerGetInstance>();
 
-		
+			
 
 		/*
 			if ((tile == doneButton.tile0) && (tile.transform.parent == doneButton.tile0.transform.parent)) {
@@ -62,29 +62,38 @@ public class TouchControls : MonoBehaviour {
 			}
 
 		*/
+		battleshipTiles.calculateIsServer ();
+		if(  (battleshipTiles.thisIsServer && battleshipTiles.isServersTurn)  ||  ((!battleshipTiles.thisIsServer) && (!battleshipTiles.isServersTurn))  ){	
 
+			if ((tile.name == battleshipTiles.remoteTile0.name) && (tile.transform.parent.name == battleshipTiles.remoteTile0.transform.parent.name )) {
+				tile.GetComponent <Renderer> ().material.color = Color.red;
+			} else if ((tile.name == battleshipTiles.remoteTile1.name) && (tile.transform.parent.name == battleshipTiles.remoteTile1.transform.parent.name )) {
+				tile.GetComponent <Renderer> ().material.color = Color.red;
+			} else if ((tile.name == battleshipTiles.remoteTile2.name) && (tile.transform.parent.name == battleshipTiles.remoteTile2.transform.parent.name )) {
+				tile.GetComponent <Renderer> ().material.color = Color.red;
+			} else {
+				tile.GetComponent <Renderer> ().material.color = Color.green;
+			}
 
-		if ((tile.name == battleshipTiles.localTile0.name) && (tile.transform.parent.name == battleshipTiles.localTile0.transform.parent.name )) {
-			tile.GetComponent <Renderer> ().material.color = Color.green;
-		} else if ((tile.name == battleshipTiles.localTile1.name) && (tile.transform.parent.name == battleshipTiles.localTile1.transform.parent.name )) {
-			tile.GetComponent <Renderer> ().material.color = Color.green;
-		} else if ((tile.name == battleshipTiles.localTile2.name) && (tile.transform.parent.name == battleshipTiles.localTile2.transform.parent.name )) {
-			tile.GetComponent <Renderer> ().material.color = Color.green;
-		} else {
-			tile.GetComponent <Renderer> ().material.color = Color.red;
+			battleshipTiles.isServersTurn = !battleshipTiles.isServersTurn;
+			battleshipTiles.CmdSendTurnStatus (battleshipTiles.isServersTurn);
 		}
 
+		/*
 
-
-		if ((tile.name == battleshipTiles.remoteTile0.name) && (tile.transform.parent.name == battleshipTiles.remoteTile0.transform.parent.name )) {
+		if ((tile.name == battleshipTiles.localTile0.name) && (tile.transform.parent.name == battleshipTiles.localTile0.transform.parent.name )) {
 			tile.GetComponent <Renderer> ().material.color = Color.black;
-		} else if ((tile.name == battleshipTiles.remoteTile1.name) && (tile.transform.parent.name == battleshipTiles.remoteTile1.transform.parent.name )) {
+		} else if ((tile.name == battleshipTiles.localTile1.name) && (tile.transform.parent.name == battleshipTiles.localTile1.transform.parent.name )) {
 			tile.GetComponent <Renderer> ().material.color = Color.black;
-		} else if ((tile.name == battleshipTiles.remoteTile2.name) && (tile.transform.parent.name == battleshipTiles.remoteTile2.transform.parent.name )) {
+		} else if ((tile.name == battleshipTiles.localTile2.name) && (tile.transform.parent.name == battleshipTiles.localTile2.transform.parent.name )) {
 			tile.GetComponent <Renderer> ().material.color = Color.black;
 		} else {
 			tile.GetComponent <Renderer> ().material.color = Color.magenta;
 		}
+
+		*/
+
+
 
 
 

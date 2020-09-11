@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Tile
   - Tile1
+  - Grid
+  - Battleship
+  - player
+  - ButtonSet
   layers:
   - Default
   - TransparentFX
