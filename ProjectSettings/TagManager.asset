@@ -10,6 +10,9 @@ TagManager:
   - Battleship
   - player
   - ButtonSet
+  - Weapons
+  - Collider
+  - dialogue
   layers:
   - Default
   - TransparentFX
