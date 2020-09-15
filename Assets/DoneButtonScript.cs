@@ -237,7 +237,8 @@ public class DoneButtonScript : MonoBehaviour {
 
 		GameObject[] buttonSet = GameObject.FindGameObjectsWithTag("ButtonSet");
 		for (int i = 0; i < buttonSet.Length; i++) {
-			buttonSet[i].SetActive (false);
+			if(buttonSet[i].transform.tag != "dialogue") 
+				buttonSet[i].SetActive (false);
 		}
 
 		/*

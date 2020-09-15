@@ -15,6 +15,9 @@ public static class FlagClass {
 
 public class PlayerGetInstance : NetworkBehaviour {
 
+	[SerializeField]
+	public Button dialogueButton;
+
 	public DoneButtonScript doneButtonScript;
 	public GameObject localTile0, localTile1, localTile2;
 	public GameObject remoteTile0, remoteTile1, remoteTile2;
@@ -249,8 +252,62 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	public void showPointTurnMessage (){
-		GameObject.Find ("DialogueButton").SetActive (true);
-		GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = "Your Turn, Blastardo";
+		string PointTurnMessage = "";
+		if (isServer) {
+			PointTurnMessage += "Opponent's points: " + localPlayerPoints + "\n Your points: " + serverPoints + "\n";
+			if (isServersTurn) {
+				PointTurnMessage += "YOUR TURN";
+			} else {
+				PointTurnMessage += "OPPONENT'S TURN";
+			}
+		} else {
+			PointTurnMessage += "Opponent's points: " + serverPoints + "\n Your points: " + localPlayerPoints + "\n";
+			if (!isServersTurn) {
+				PointTurnMessage += "YOUR TURN";
+			} else {
+				PointTurnMessage += "OPPONENT'S TURN";
+			}
+		}
+		dialogueButton.GetComponentInChildren<Text>().text = PointTurnMessage;
+
+		/*GameObject[] arr = GameObject.FindGameObjectsWithTag ("dialogue");
+		for (int i = 0; i < arr.Length; i++) {
+			string PointTurnMessage = "";
+			if (isServer) {
+				PointTurnMessage += "Opponent's points: " + localPlayerPoints + "\n Your points: " + serverPoints + "\n";
+				if (isServersTurn) {
+					PointTurnMessage += "YOUR TURN";
+				} else {
+					PointTurnMessage += "OPPONENT'S TURN";
+				}
+			} else {
+				PointTurnMessage += "Opponent's points: " + serverPoints + "\n Your points: " + localPlayerPoints + "\n";
+				if (!isServersTurn) {
+					PointTurnMessage += "YOUR TURN";
+				} else {
+					PointTurnMessage += "OPPONENT'S TURN";
+				}
+			}
+			arr[i].GetComponentInChildren<Text>().text = PointTurnMessage;
+		}*/
+		/*GameObject.Find ("DialogueButton").SetActive (true);
+		string PointTurnMessage = "";
+		if (isServer) {
+			PointTurnMessage += "Opponent's points: " + localPlayerPoints + "\n Your points: " + serverPoints + "\n";
+			if (isServersTurn) {
+				PointTurnMessage += "YOUR TURN";
+			} else {
+				PointTurnMessage += "OPPONENT'S TURN";
+			}
+		} else {
+			PointTurnMessage += "Opponent's points: " + serverPoints + "\n Your points: " + localPlayerPoints + "\n";
+			if (!isServersTurn) {
+				PointTurnMessage += "YOUR TURN";
+			} else {
+				PointTurnMessage += "OPPONENT'S TURN";
+			}
+		}
+		GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = PointTurnMessage;*/
 	}
 
 
@@ -267,10 +324,26 @@ public class PlayerGetInstance : NetworkBehaviour {
 		isTied = m_isTied;
 		serverWins = m_serverWins;
 		localPlayerWins = m_localPlayerWins;
-		showGameOverMessage ();
+		//showGameOverMessage ();
 	}
 
-	void showGameOverMessage(){
+	public void showGameOverMessage(){
+		GameObject.Find ("DialogueButton").SetActive (true);
+		string GameOverMessage = "Game Over\n";
+		if (isServer) {
+			if (serverWins) {
+				GameOverMessage += "YOU WIN!!!";
+			} else {
+				GameOverMessage += "OPPONENT WINS :(";
+			}
+		} else {
+			if (!serverWins) {
+				GameOverMessage += "YOU WIN!!!";
+			} else {
+				GameOverMessage += "OPPONENT WINS :(";
+			}
+		}
+		GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = GameOverMessage;
 	}
 
 

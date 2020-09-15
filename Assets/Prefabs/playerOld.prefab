@@ -12632,6 +12632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0416c7bfad608104896412e6add96639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueButton: {fileID: 114114066809052872}
   doneButtonScript: {fileID: 0}
   localTile0: {fileID: 0}
   localTile1: {fileID: 0}
