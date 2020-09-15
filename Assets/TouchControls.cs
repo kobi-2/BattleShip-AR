@@ -20,8 +20,14 @@ public class TouchControls : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
 
+		/*
+		PlayerGetInstance pgi = this.GetComponentInParent<PlayerGetInstance>();
+		if (pgi.hasColorValue) {
+			pgi.tile.GetComponent<Renderer> ().material.color = pgi.color;
+		}
+		*/
+			
 		if (Input.GetMouseButtonDown (0)) {
 
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -48,7 +54,7 @@ public class TouchControls : MonoBehaviour {
 
 		battleshipTiles = this.GetComponentInParent<PlayerGetInstance>();
 
-			
+
 
 		//check if this is server...
 		battleshipTiles.calculateIsServer ();
@@ -92,16 +98,26 @@ public class TouchControls : MonoBehaviour {
 			} else {
 				tile.GetComponent <Renderer> ().material.color = Color.green;
 			}
+				
 
+			//updating points
 			if ( (battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
 				battleshipTiles.serverPoints++;
 			}else if ( (!battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
 				battleshipTiles.localPlayerPoints++;
 			}
 				
+			//updating turn
 			battleshipTiles.isServersTurn = !battleshipTiles.isServersTurn;
 
-			battleshipTiles.CmdSendUpdates (battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+			// sending the updates
+			if (tile.GetComponent <Renderer> ().material.color == Color.red) {
+				battleshipTiles.CmdSendUpdates (tile, Color.red, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+
+			}else if(tile.GetComponent <Renderer> ().material.color == Color.green){
+				battleshipTiles.CmdSendUpdates (tile, Color.green, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+			}
+
 
 
 		}

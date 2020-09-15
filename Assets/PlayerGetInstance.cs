@@ -18,6 +18,10 @@ public class PlayerGetInstance : NetworkBehaviour {
 	public GameObject localTile0, localTile1, localTile2;
 	public GameObject remoteTile0, remoteTile1, remoteTile2;
 
+	public GameObject tile;
+	public Color color;
+	public bool hasColorValue;
+
 	public bool isServersTurn, thisIsServer ;
 
 	public bool isGameOver, serverWins, localPlayerWins, isTied;
@@ -28,6 +32,8 @@ public class PlayerGetInstance : NetworkBehaviour {
 		//Object[] objects = Object.FindObjectsOfType<GameObject.>;
 		//GameObject ob = GameObject.FindGameObjectsWithTag;
 		//this.GetInstanceID;
+
+		hasColorValue = false;
 
 		getTiles ();
 		isServersTurn = false;
@@ -96,16 +102,23 @@ public class PlayerGetInstance : NetworkBehaviour {
 		if (isServer) {
 
 			thisIsServer = true;
-			
+
+
 			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
-
-
 			gameObjects [0].GetComponent<Renderer> ().material.color = Color.red;
+			//gameObjects [1].GetComponent<Renderer> ().material.color = Color.green;
+			//gameObjects [1].GetComponentInChildren<MeshRenderer> ().enabled = false;
+			//gameObjects [0].GetComponentInChildren<MeshRenderer> ().enabled = false;
 
-			gameObjects [1].GetComponent<Renderer> ().material.color = Color.green;
+			Renderer[] obj = gameObjects[1].GetComponentsInChildren<MeshRenderer> ();
+			for (int i = 0; i < obj.Length; i++) {
+				obj [i].enabled = false;
+			}
+
+			gameObjects [0].GetComponentInChildren<MeshRenderer> ().enabled = true;
+
 
 			DoneButtonScript dB = gameObjects [1].GetComponentInChildren<DoneButtonScript> ();// index 1 is the remote player for server
-
 			dB.calculateTilePosition ();
 			//dB.calculateTilePosition (FlagClass.rowStatus[0]);
 
@@ -119,14 +132,21 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 			thisIsServer = false;
 		
+
 			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
-
-			gameObjects [0].GetComponent<Renderer> ().material.color = Color.blue;
-
+			//gameObjects [0].GetComponent<Renderer> ().material.color = Color.blue;
 			gameObjects [1].GetComponent<Renderer> ().material.color = Color.black;
+			//gameObjects [0].GetComponentInChildren<MeshRenderer> ().enabled = false;
+			//gameObjects [1].GetComponentInChildren<MeshRenderer> ().enabled = false;
+
+			if (gameObjects.Length > 1) {
+				Renderer[] obj = gameObjects [0].GetComponentsInChildren<MeshRenderer> ();
+				for (int i = 0; i < obj.Length; i++) {
+					obj [i].enabled = false;
+				}
+			}
 
 			DoneButtonScript dB = gameObjects [0].GetComponentInChildren<DoneButtonScript> ();	// index 0 is the server
-
 			dB.calculateTilePosition ();
 			//FlagClass.rowStatus[gameObjects.Length-1] = ShipOrientation.rowWise;
 			//dB.calculateTilePosition (FlagClass.rowStatus[gameObjects.Length-1]);
@@ -203,14 +223,19 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	[Command]
-	public void CmdSendUpdates(bool turnStatus, int m_serverPoints, int m_localPlayerPoints){
-		RpcReceiveUpdate (turnStatus, m_serverPoints, m_localPlayerPoints);
+	public void CmdSendUpdates(GameObject m_tile, Color m_color, bool turnStatus, int m_serverPoints, int m_localPlayerPoints){
+		RpcReceiveUpdate (m_tile, m_color, turnStatus, m_serverPoints, m_localPlayerPoints);
 	}
 
 
 	[ClientRpc]
-	public void RpcReceiveUpdate(bool turnStatus,int m_serverPoints, int m_localPlayerPoints){
+	public void RpcReceiveUpdate(GameObject m_tile, Color m_color, bool turnStatus,int m_serverPoints, int m_localPlayerPoints){
 		isServersTurn = turnStatus;
+
+		hasColorValue = true;
+		tile = m_tile;
+		color = m_color;
+
 		serverPoints = m_serverPoints;
 		bool hasScored = false;
 		if (m_localPlayerPoints > localPlayerPoints) {
@@ -245,6 +270,24 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 	void showGameOverMessage(){
 	}
+
+
+
+	[Command]
+	public void CmdSendUpdateColor(bool m_hasColorValue, GameObject m_tile, Color m_color){
+		RpcReceiveUpdateColor (m_hasColorValue, m_tile, m_color);
+	}
+
+	[ClientRpc]
+	public void RpcReceiveUpdateColor(bool m_hasColorValue, GameObject m_tile, Color m_color){
+		hasColorValue = m_hasColorValue;
+		tile = m_tile;
+		color = m_color;
+	}
+
+
+
+
 
 }
 

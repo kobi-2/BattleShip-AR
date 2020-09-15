@@ -240,6 +240,17 @@ public class DoneButtonScript : MonoBehaviour {
 			buttonSet[i].SetActive (false);
 		}
 
+		/*
+		Renderer[] obj = this.GetComponentsInChildren<MeshRenderer> ();
+		for (int i = 0; i < obj.Length; i++) {
+			obj [i].enabled = false;
+		}
+		GameObject.FindGameObjectWithTag ("Weapons").GetComponentInChildren<MeshRenderer> ().enabled = false;
+		GameObject.FindGameObjectWithTag ("Collider").GetComponentInChildren<MeshRenderer> ().enabled = false;
+		*/
+
+		//this.GetComponent<Renderer> ().enabled = false;
+	
 	}
 
 
