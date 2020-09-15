@@ -249,7 +249,8 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	public void showPointTurnMessage (){
-		GameObject.Find("DialogueText").GetComponentInChildren<Text>().text = "Your Turn, Blastardo";
+		GameObject.Find ("DialogueButton").SetActive (true);
+		GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = "Your Turn, Blastardo";
 	}
 
 
