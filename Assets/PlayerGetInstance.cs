@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 public static class FlagClass {
@@ -248,7 +249,7 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	public void showPointTurnMessage (){
-		
+		GameObject.Find("DialogueText").GetComponentInChildren<Text>().text = "Your Turn, Blastardo";
 	}
 
 

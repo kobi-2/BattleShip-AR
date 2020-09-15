@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{5BB9E891-1741-609A-AE67-87F1CCE104C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip", "Assembly-CSharp-firstpass.csproj", "{5BB9E891-1741-609A-AE67-87F1CCE104C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{5D4F921A-0B4E-6041-6796-4582536DCF4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip", "Assembly-CSharp.csproj", "{5D4F921A-0B4E-6041-6796-4582536DCF4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{2B06248D-2277-43DB-7553-1A2ABDFF92B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip", "Assembly-CSharp-Editor-firstpass.csproj", "{2B06248D-2277-43DB-7553-1A2ABDFF92B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{A90EEEE3-F31B-376F-C649-EB437B22A562}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip", "Assembly-CSharp-Editor.csproj", "{A90EEEE3-F31B-376F-C649-EB437B22A562}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
