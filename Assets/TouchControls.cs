@@ -42,29 +42,47 @@ public class TouchControls : MonoBehaviour {
 
 	public void performAttack(){
 
-			//no need? this was old alternatives...
-			//GameObject battleShip = GameObject.Find ("Battleship");
-			//doneButton = battleShip.GetComponent<DoneButtonScript> ();
+		//no need? this was old alternatives...
+		//GameObject battleShip = GameObject.Find ("Battleship");
+		//doneButton = battleShip.GetComponent<DoneButtonScript> ();
 
-			battleshipTiles = this.GetComponentInParent<PlayerGetInstance>();
+		battleshipTiles = this.GetComponentInParent<PlayerGetInstance>();
 
 			
 
-		/*
-			if ((tile == doneButton.tile0) && (tile.transform.parent == doneButton.tile0.transform.parent)) {
-				tile.GetComponent <Renderer> ().material.color = Color.green;
-			} else if ((tile == doneButton.tile1) && (tile.transform.parent == doneButton.tile1.transform.parent)) {
-				tile.GetComponent <Renderer> ().material.color = Color.green;
-			} else if ((tile == doneButton.tile2) && (tile.transform.parent == doneButton.tile2.transform.parent)) {
-				tile.GetComponent <Renderer> ().material.color = Color.green;
-			} else {
-				tile.GetComponent <Renderer> ().material.color = Color.red;
+		//check if this is server...
+		battleshipTiles.calculateIsServer ();
+
+
+		// check if local player wins...
+		if ((!battleshipTiles.thisIsServer) && (!battleshipTiles.isGameOver)) {
+
+			if (battleshipTiles.localPlayerPoints >= 3 && battleshipTiles.serverPoints >=3) {
+				
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.isTied = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
+
+			}else if(battleshipTiles.localPlayerPoints>=3){
+				
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.localPlayerWins = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
+
+			}else if(battleshipTiles.serverPoints>=3){
+				
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.serverWins = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
 			}
 
-		*/
-		battleshipTiles.calculateIsServer ();
-		if(  (battleshipTiles.thisIsServer && battleshipTiles.isServersTurn)  ||  ((!battleshipTiles.thisIsServer) && (!battleshipTiles.isServersTurn))  ){	
+		}
 
+
+		// perform attack, and change turn, and add points...
+		//if( ( (battleshipTiles.thisIsServer && battleshipTiles.isServersTurn)  ||  ((!battleshipTiles.thisIsServer) && (!battleshipTiles.isServersTurn)) )  ){	
+		if( (!battleshipTiles.isGameOver) && ( (battleshipTiles.thisIsServer && battleshipTiles.isServersTurn)  ||  ((!battleshipTiles.thisIsServer) && (!battleshipTiles.isServersTurn)) )  ){	
+			
 			if ((tile.name == battleshipTiles.remoteTile0.name) && (tile.transform.parent.name == battleshipTiles.remoteTile0.transform.parent.name )) {
 				tile.GetComponent <Renderer> ().material.color = Color.red;
 			} else if ((tile.name == battleshipTiles.remoteTile1.name) && (tile.transform.parent.name == battleshipTiles.remoteTile1.transform.parent.name )) {
@@ -75,9 +93,62 @@ public class TouchControls : MonoBehaviour {
 				tile.GetComponent <Renderer> ().material.color = Color.green;
 			}
 
+			if ( (battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
+				battleshipTiles.serverPoints++;
+			}else if ( (!battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
+				battleshipTiles.localPlayerPoints++;
+			}
+				
 			battleshipTiles.isServersTurn = !battleshipTiles.isServersTurn;
-			battleshipTiles.CmdSendTurnStatus (battleshipTiles.isServersTurn);
+
+			battleshipTiles.CmdSendUpdates (battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+
+
 		}
+
+
+	
+
+		// check if server player wins...
+		if ((battleshipTiles.thisIsServer) && (!battleshipTiles.isGameOver)) {
+
+			if (battleshipTiles.localPlayerPoints >= 3 && battleshipTiles.serverPoints >=3) {
+
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.isTied = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
+
+			}else if(battleshipTiles.localPlayerPoints>=3){
+
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.localPlayerWins = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
+
+			}else if(battleshipTiles.serverPoints>=3){
+
+				battleshipTiles.isGameOver = true;
+				battleshipTiles.serverWins = true;
+				battleshipTiles.CmdSendGameOver (battleshipTiles.isTied, battleshipTiles.serverWins, battleshipTiles.localPlayerWins);
+			}
+
+		}
+
+
+
+
+		/*
+		if ((tile == doneButton.tile0) && (tile.transform.parent == doneButton.tile0.transform.parent)) {
+			tile.GetComponent <Renderer> ().material.color = Color.green;
+		} else if ((tile == doneButton.tile1) && (tile.transform.parent == doneButton.tile1.transform.parent)) {
+			tile.GetComponent <Renderer> ().material.color = Color.green;
+		} else if ((tile == doneButton.tile2) && (tile.transform.parent == doneButton.tile2.transform.parent)) {
+			tile.GetComponent <Renderer> ().material.color = Color.green;
+		} else {
+			tile.GetComponent <Renderer> ().material.color = Color.red;
+		}
+
+		*/
+
 
 		/*
 

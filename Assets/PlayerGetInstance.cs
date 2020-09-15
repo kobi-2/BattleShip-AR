@@ -18,7 +18,10 @@ public class PlayerGetInstance : NetworkBehaviour {
 	public GameObject localTile0, localTile1, localTile2;
 	public GameObject remoteTile0, remoteTile1, remoteTile2;
 
-	public bool isServersTurn, thisIsServer;
+	public bool isServersTurn, thisIsServer ;
+
+	public bool isGameOver, serverWins, localPlayerWins, isTied;
+	public int serverPoints, localPlayerPoints;
 
 	void Start () {
 		
@@ -28,6 +31,16 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 		getTiles ();
 		isServersTurn = false;
+
+		isGameOver = false;
+
+		serverWins = false;
+		localPlayerWins = false;
+		isTied = false;
+
+		serverPoints = 0;
+		localPlayerPoints = 0;
+
 
 		/*
 		RemotePlayer remotePlayer = new RemotePlayer();
@@ -165,15 +178,6 @@ public class PlayerGetInstance : NetworkBehaviour {
 	}
 
 
-	[Command]
-	public void CmdSendTurnStatus(bool turnStatus){
-		RpcUpdateTurnStatus (turnStatus);
-	}
-
-	[ClientRpc]
-	public void RpcUpdateTurnStatus(bool turnStatus){
-		isServersTurn = turnStatus;
-	}
 
 
 	[Command]
@@ -195,7 +199,52 @@ public class PlayerGetInstance : NetworkBehaviour {
 		}
 	
 	}
+
+
+
+	[Command]
+	public void CmdSendUpdates(bool turnStatus, int m_serverPoints, int m_localPlayerPoints){
+		RpcReceiveUpdate (turnStatus, m_serverPoints, m_localPlayerPoints);
+	}
+
+
+	[ClientRpc]
+	public void RpcReceiveUpdate(bool turnStatus,int m_serverPoints, int m_localPlayerPoints){
+		isServersTurn = turnStatus;
+		serverPoints = m_serverPoints;
+		bool hasScored = false;
+		if (m_localPlayerPoints > localPlayerPoints) {
+			hasScored = true;
+		}
+		localPlayerPoints = m_localPlayerPoints;
+
+		showPointTurnMessage ();
+	}
+
+
+	public void showPointTurnMessage (){
 		
+	}
+
+
+
+	[Command]
+	public void CmdSendGameOver(bool m_isTied, bool m_serverWins, bool m_localPlayerWins){
+		RpcUpdateGameOver (m_isTied, m_serverWins, m_localPlayerWins);
+	}
+
+
+	[ClientRpc]
+	public void RpcUpdateGameOver(bool m_isTied, bool m_serverWins, bool m_localPlayerWins){
+		isGameOver = true;
+		isTied = m_isTied;
+		serverWins = m_serverWins;
+		localPlayerWins = m_localPlayerWins;
+		showGameOverMessage ();
+	}
+
+	void showGameOverMessage(){
+	}
 
 }
 
