@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/splash.unity
+    guid: 01ea2db7b438ef440b10a87913ecd266
+  - enabled: 1
     path: Assets/Scenes/done_button_with_script.unity
     guid: 858e595684c33434a9d012787eed8ebd
   - enabled: 0
@@ -24,8 +27,8 @@ EditorBuildSettings:
     path: Assets/Scenes/one_button.unity
     guid: c60d5d90f60de184baacf0fbbeb14beb
   - enabled: 0
-    path: Assets/Scenes/one_ship_with_grid.unity
-    guid: 64b8a9bcf6c3a21469aceb6a3b6a3455
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Scenes/only_one_ship.unity
     guid: 4861db9f505134c44b1fca439852da26
