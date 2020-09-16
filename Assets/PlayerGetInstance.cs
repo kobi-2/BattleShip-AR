@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 
 public static class FlagClass {
@@ -15,6 +15,9 @@ public static class FlagClass {
 
 public class PlayerGetInstance : NetworkBehaviour {
 
+	private GameObject[] pDB;
+	public int serverPDB, localPDB;
+
 	public DoneButtonScript doneButtonScript;
 	public GameObject localTile0, localTile1, localTile2;
 	public GameObject remoteTile0, remoteTile1, remoteTile2;
@@ -22,6 +25,7 @@ public class PlayerGetInstance : NetworkBehaviour {
 	public GameObject tile;
 	public Color color;
 	public bool hasColorValue;
+	public string playerName;
 
 	public bool isServersTurn, thisIsServer ;
 
@@ -29,7 +33,11 @@ public class PlayerGetInstance : NetworkBehaviour {
 	public int serverPoints, localPlayerPoints;
 
 	void Start () {
-		
+
+		serverPDB = 0;
+		localPDB = 0;
+		pDB = GameObject.FindGameObjectsWithTag ("ParentDialogueButton");
+
 		//Object[] objects = Object.FindObjectsOfType<GameObject.>;
 		//GameObject ob = GameObject.FindGameObjectsWithTag;
 		//this.GetInstanceID;
@@ -105,15 +113,28 @@ public class PlayerGetInstance : NetworkBehaviour {
 			thisIsServer = true;
 
 
+
+			if (serverPDB<=0) {
+
+				for (int i = 0; i < pDB.Length; i++) {
+					pDB [i].SetActive (false);
+				}
+				
+				serverPDB++;
+			}
+				
+
 			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
 			gameObjects [0].GetComponent<Renderer> ().material.color = Color.red;
 			//gameObjects [1].GetComponent<Renderer> ().material.color = Color.green;
 			//gameObjects [1].GetComponentInChildren<MeshRenderer> ().enabled = false;
 			//gameObjects [0].GetComponentInChildren<MeshRenderer> ().enabled = false;
 
-			Renderer[] obj = gameObjects[1].GetComponentsInChildren<MeshRenderer> ();
-			for (int i = 0; i < obj.Length; i++) {
-				obj [i].enabled = false;
+
+
+			Renderer[] rObj = gameObjects[1].GetComponentsInChildren<MeshRenderer> ();
+			for (int i = 0; i < rObj.Length; i++) {
+				rObj [i].enabled = false;
 			}
 
 			gameObjects [0].GetComponentInChildren<MeshRenderer> ().enabled = true;
@@ -127,12 +148,38 @@ public class PlayerGetInstance : NetworkBehaviour {
 			remoteTile1 = dB.tile1;
 			remoteTile2 = dB.tile2;
 
+
+			//coloring the tile
+			/*
+			if((playerName.CompareTo("LocalPlayer")==0) && hasColorValue){
+				//gameObjects[0].GetComponentsInChildren
+				GameObject[] gObjs = GameObject.FindGameObjectsWithTag("Tile");
+				for (int i = 0; i < gObjs.Length; i++) {
+					if (gObjs[i].name == tile.name && gObjs[i].transform.parent.name == tile.transform.parent.name) {
+						gObjs [i].GetComponent<Renderer> ().material.color = color;
+					}
+				}
+			}
+			*/
+
 		}
+
+
 
 		if (isLocalPlayer) {
 
 			thisIsServer = false;
 		
+
+
+			if (localPDB<=0) {
+				for (int i = 0; i < pDB.Length; i++) {
+					pDB [i].SetActive (false);
+				}
+
+				localPDB++;
+			}
+
 
 			GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Battleship");
 			//gameObjects [0].GetComponent<Renderer> ().material.color = Color.blue;
@@ -156,7 +203,22 @@ public class PlayerGetInstance : NetworkBehaviour {
 			remoteTile1 = dB.tile1;
 			remoteTile2 = dB.tile2;
 
+			/*
+			if( (playerName.CompareTo("ServerPlayer")==0) && hasColorValue){
+				//gameObjects[0].GetComponentsInChildren
+				GameObject[] gObjs = GameObject.FindGameObjectsWithTag("Tile");
+				for (int i = 0; i < gObjs.Length; i++) {
+					if (gObjs[i].name == tile.name && gObjs[i].transform.parent.name == tile.transform.parent.name) {
+						gObjs [i].GetComponent<Renderer> ().material.color = color;
+					}
+				}
+			}
+			*/
+				
+
+
 		}
+
 
 
 		/*
@@ -201,6 +263,7 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 
+
 	[Command]
 	public void CmdSendTiles(RemotePlayer remotePlayer){
 		RpcGetRemoteTiles (remotePlayer);
@@ -224,16 +287,17 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	[Command]
-	public void CmdSendUpdates(GameObject m_tile, Color m_color, bool turnStatus, int m_serverPoints, int m_localPlayerPoints){
-		RpcReceiveUpdate (m_tile, m_color, turnStatus, m_serverPoints, m_localPlayerPoints);
+	public void CmdSendUpdates(string m_playerName, GameObject m_tile, Color m_color, bool turnStatus, int m_serverPoints, int m_localPlayerPoints){
+		RpcReceiveUpdate (m_playerName, m_tile, m_color, turnStatus, m_serverPoints, m_localPlayerPoints);
 	}
 
 
 	[ClientRpc]
-	public void RpcReceiveUpdate(GameObject m_tile, Color m_color, bool turnStatus,int m_serverPoints, int m_localPlayerPoints){
+	public void RpcReceiveUpdate(string m_playerName, GameObject m_tile, Color m_color, bool turnStatus,int m_serverPoints, int m_localPlayerPoints){
 		isServersTurn = turnStatus;
 
 		hasColorValue = true;
+		playerName = m_playerName;
 		tile = m_tile;
 		color = m_color;
 
@@ -249,8 +313,69 @@ public class PlayerGetInstance : NetworkBehaviour {
 
 
 	public void showPointTurnMessage (){
-		GameObject.Find ("DialogueButton").SetActive (true);
-		GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = "Your Turn, Blastardo";
+
+
+		if (thisIsServer && isServersTurn) {
+			for (int i = 0; i < pDB.Length; i++) {
+				//GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = "la di da " ;
+				//Button button = GameObject.Find("DialogueButton").GetComponent<Button>();
+
+				pDB [i].SetActive (true);
+
+				/*
+				GameObject[] bObj = GameObject.FindGameObjectsWithTag ("dialogue");
+				for (int j = 0; j < bObj.Length; j++) {
+					//bObj[j].GetComponentInChildren<Text>().text = "la di da";
+					bObj[j].GetComponent<Text>().text = "la di da";
+				}
+				*/
+
+				GameObject[] tObj = GameObject.FindGameObjectsWithTag("TextDialogueButton");
+				Text text;
+				for (int j = 0; j < tObj.Length; j++) {
+					text = tObj [j].GetComponentInChildren<Text> ();
+					//text = GameObject.Find ("Text_DialogueButton").GetComponent<Text> ();
+					text.text = "You: " + serverPoints + "   Opponent: " + localPlayerPoints + " \n YOUR TURN!";
+				}
+
+			}
+		} else if (thisIsServer && !isServersTurn) {
+			for (int i = 0; i < pDB.Length; i++) {
+				pDB [i].SetActive (false);
+			}
+		}
+
+		if (!thisIsServer && !isServersTurn) {
+			for (int i = 0; i < pDB.Length; i++) {
+				//GameObject.Find("DialogueButton").GetComponentInChildren<Text>().text = "la di da " ;
+				//Button button = GameObject.Find("DialogueButton").GetComponent<Button>();
+
+				pDB [i].SetActive (true);
+
+				/*
+				GameObject[] bObj = GameObject.FindGameObjectsWithTag ("dialogue");
+				for (int j = 0; j < bObj.Length; j++) {
+					//bObj[j].GetComponentInChildren<Text>().text = "la di da";
+					bObj[j].GetComponent<Text>().text = "la di da";	
+				}
+
+				*/
+
+				GameObject[] tObj = GameObject.FindGameObjectsWithTag("TextDialogueButton");
+				Text text;
+				for (int j = 0; j < tObj.Length; j++) {
+					text = tObj [j].GetComponentInChildren<Text> ();
+					//text = GameObject.Find ("Text_DialogueButton").GetComponent<Text> ();
+					text.text = "You: " + localPlayerPoints + "   Opponent: " + serverPoints + " \n YOUR TURN!";
+				}
+
+			}
+		} else if (!thisIsServer && isServersTurn) {
+			for (int i = 0; i < pDB.Length; i++) {
+				pDB [i].SetActive (false);
+			}
+		}
+
 	}
 
 
@@ -271,6 +396,60 @@ public class PlayerGetInstance : NetworkBehaviour {
 	}
 
 	void showGameOverMessage(){
+
+
+		if (thisIsServer) {
+			
+			string result ="";
+			if (isTied) {
+				result = "Game Tied! You both suck!";
+			}else if(serverWins){
+				result = "You WON, But At What Cost!";
+			}else if(localPlayerWins){
+				result = "OOPSIE, GOT REKT! GGEZ!";
+			}
+			
+			for (int i = 0; i < pDB.Length; i++) {
+				pDB [i].SetActive (true);
+
+				GameObject[] tObj = GameObject.FindGameObjectsWithTag("TextDialogueButton");
+				Text text;
+				for (int j = 0; j < tObj.Length; j++) {
+					text = tObj [j].GetComponentInChildren<Text> ();
+					//text = GameObject.Find ("Text_DialogueButton").GetComponent<Text> ();
+					text.text = result;
+				}
+
+			}
+
+		} 
+
+		if (!thisIsServer) {
+
+			string result ="";
+			if (isTied) {
+				result = "Game Tied! You both suck!";
+			}else if(serverWins){
+				result = "OOPSIE, GOT REKT! GGEZ!";
+			}else if(localPlayerWins){
+				result = "You WON, But At What Cost!";
+			}
+			
+			for (int i = 0; i < pDB.Length; i++) {
+				pDB [i].SetActive (true);
+
+				GameObject[] tObj = GameObject.FindGameObjectsWithTag("TextDialogueButton");
+				Text text;
+				for (int j = 0; j < tObj.Length; j++) {
+					text = tObj [j].GetComponentInChildren<Text> ();
+					//text = GameObject.Find ("Text_DialogueButton").GetComponent<Text> ();
+					text.text = result;
+				}
+
+			}
+
+		}
+
 	}
 
 

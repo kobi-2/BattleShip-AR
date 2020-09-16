@@ -101,21 +101,33 @@ public class TouchControls : MonoBehaviour {
 				
 
 			//updating points
-			if ( (battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
+			if ( (battleshipTiles.thisIsServer) && (battleshipTiles.isServersTurn) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
 				battleshipTiles.serverPoints++;
-			}else if ( (!battleshipTiles.thisIsServer) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
+			}else if ( (!battleshipTiles.thisIsServer) && (!battleshipTiles.isServersTurn) && ( tile.GetComponent<Renderer>().material.color == Color.red) )  {
 				battleshipTiles.localPlayerPoints++;
 			}
-				
+
+			// mPlayerName for grid color sync purpose
+			string mPlayerName;
+			if (battleshipTiles.isServersTurn && battleshipTiles.thisIsServer) {
+				mPlayerName = "ServerPlayer";
+			} else if ((!battleshipTiles.isServersTurn) && (!battleshipTiles.thisIsServer)) {
+				mPlayerName = "LocalPlayer";
+			} else {
+				mPlayerName = "NoPlayer";
+			}
+
 			//updating turn
 			battleshipTiles.isServersTurn = !battleshipTiles.isServersTurn;
 
-			// sending the updates
+			// sending the updates with colors
 			if (tile.GetComponent <Renderer> ().material.color == Color.red) {
-				battleshipTiles.CmdSendUpdates (tile, Color.red, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+				battleshipTiles.CmdSendUpdates (mPlayerName, tile, Color.red, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
 
-			}else if(tile.GetComponent <Renderer> ().material.color == Color.green){
-				battleshipTiles.CmdSendUpdates (tile, Color.green, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+			} else if (tile.GetComponent <Renderer> ().material.color == Color.green) {
+				battleshipTiles.CmdSendUpdates (mPlayerName, tile, Color.green, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
+			} else {
+				battleshipTiles.CmdSendUpdates (mPlayerName, tile, Color.green, battleshipTiles.isServersTurn, battleshipTiles.serverPoints, battleshipTiles.localPlayerPoints);
 			}
 
 
