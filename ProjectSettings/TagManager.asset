@@ -13,6 +13,8 @@ TagManager:
   - Weapons
   - Collider
   - dialogue
+  - ParentDialogueButton
+  - TextDialogueButton
   layers:
   - Default
   - TransparentFX
