@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/mueez/OneDrive/Documents/BattleShip/BattleShipAR.apk
+F:/BattleShip/BattleShip-extraEditz.apk
 SceneListBegin?
 Assets/Scenes/splash.unity
 Assets/Scenes/done_button_with_script.unity
